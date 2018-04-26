@@ -107,13 +107,24 @@ def remove_outlier(df_in, col_name):
 list_num = ["10th percentage", "12th percentage", "College percentage", "English 1", "English 2","English 3","English 4","Quantitative Ability 1", "Quantitative Ability 2", "Quantitative Ability 3", "Quantitative Ability 4","Domain Skills 1", "Domain Skills 2", "Domain Test 3", "Domain Test 4", "Analytical Skills 1", "Analytical Skills 2","Analytical Skills 3"]
 
 #list_cat é os nomes das categóricas
-list_cat = ["Name", "Month of Birth", "Year of Birth", "Gender", "State(Location)","10th Completion Year", "12th Completion Year", "Degree of study", "Specialization in study", "Year of Completion of college", "Performance"]
+#list_cat = ["12th Completion year", "Degree of study", "Specialization in study", "Year of Completion of college", "Performance"]
+list_cat = ["Year of Birth", "Gender", "State(Location)","10th Completion Year"]
 for i in list_num:
     data2 = remove_outlier(data2, i)
 
 data2[["Gender", "Quantitative Ability 1"]].groupby("Gender").boxplot(subplots=True, vert=True)#,showfliers=False)
 
 #histograma
-
-data2.hist("English 1", by="Degree of study")
-plt.show()
+for i in list_cat:
+    for j in list_num:
+        data2.hist(j, by=i)
+        plt.savefig(i+j)
+#boxplot relacionado
+for i in list_cat:
+    for j in list_num:
+        data2[[i, j]].groupby(i).boxplot(subplots=True, vert=True)
+        plt.savefig("boxplot "+i + j)
+#boxplot purao
+for j in list_num:
+    data2[j].plot(kind='box',subplots=True, vert=True)
+    plt.savefig("boxplot "+j)
