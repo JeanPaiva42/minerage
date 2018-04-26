@@ -7,6 +7,7 @@ data = pd.read_csv(file, skipinitialspace=True)
 data2 = pd.read_csv(file, skipinitialspace=True)
 data.drop_duplicates(keep='first', inplace=False)
 data2.drop_duplicates(keep='first', inplace=True)
+opa = data2['Performance']
 del data2['Performance']
 #Tratando itens faltantes
 
@@ -26,6 +27,12 @@ for i, row in data2.iterrows():
     for j in keys_list:
         if row[j] == 'MD':
             print(str(i)+" "+str(j))
+
+
+#restaura a coluna Performance
+data2['Performance'] = opa
+
+
 
 #substituindo os nan por média de valores com categoria y
 #Os valores nan se encontram nas colunas 'Quantitative Ability 1', 'Domain Skills 1', 'Analytical Skills 1'
@@ -95,9 +102,18 @@ def remove_outlier(df_in, col_name):
 
 #adequando todos os outliers do dataSet
 #os outliers tiveram seus dados jogados para os limites do bp
+
+#list_num é os nomes das colunas numerais
 list_num = ["10th percentage", "12th percentage", "College percentage", "English 1", "English 2","English 3","English 4","Quantitative Ability 1", "Quantitative Ability 2", "Quantitative Ability 3", "Quantitative Ability 4","Domain Skills 1", "Domain Skills 2", "Domain Test 3", "Domain Test 4", "Analytical Skills 1", "Analytical Skills 2","Analytical Skills 3"]
+
+#list_cat é os nomes das categóricas
+list_cat = ["Name", "Month of Birth", "Year of Birth", "Gender", "State(Location)","10th Completion Year", "12th Completion Year", "Degree of study", "Specialization in study", "Year of Completion of college", "Performance"]
 for i in list_num:
     data2 = remove_outlier(data2, i)
 
-oi = data2[["Gender", "Quantitative Ability 1"]].groupby("Gender").boxplot(subplots=True, vert=True)#,showfliers=False)
+data2[["Gender", "Quantitative Ability 1"]].groupby("Gender").boxplot(subplots=True, vert=True)#,showfliers=False)
+
+#histograma
+
+data2.hist("English 1", by="Degree of study")
 plt.show()
